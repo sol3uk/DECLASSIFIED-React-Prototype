@@ -196,6 +196,7 @@ export const DeclassifiedContextProvider = ({ children }) => {
 				currentEggFilter.searchTerm,
 				currentEggFilter.easterEggTypes,
 			);
+			filteredMisc = filteredMisc.sort((a, b) => a.title.localeCompare(b.title));
 			setFilteredEggStore(filteredMisc);
 		}
 	}, [collectedIntel, currentEggFilter.easterEggTypes, currentEggFilter.searchTerm, currentIntelFilter, currentMapGroup])
