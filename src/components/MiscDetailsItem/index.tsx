@@ -36,7 +36,6 @@ export const MiscDetailItem = ({
 	const iconSource = `assets/img/markers/${(icon ?? '').toLowerCase()}.${SvgIcons[icon ?? ''] ? 'svg' : 'png'}`;
 	const ItemHasLocation = loc !== DefaultPOIData.nullLoc;
 	const ItemIsOnAnotherMap = miscMapId !== currentMap!.id;
-	console.log(icon);
 
 	return (
 

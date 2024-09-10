@@ -58,7 +58,7 @@ export const EggListMenu = () => {
                     >
                         <TextField
                             id="easterEggSearch"
-                            label="Search Egg"
+                            label="Search"
                             variant="outlined"
                             {...register('searchTerm')}
                         />
