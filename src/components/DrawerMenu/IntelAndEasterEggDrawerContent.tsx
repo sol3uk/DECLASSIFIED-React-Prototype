@@ -5,10 +5,12 @@ import { useTheme } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import * as React from 'react';
+import { useState } from "react";
 import { EggList } from "../EasterEggs/List";
 import { EggListMenu } from "../EasterEggs/ListMenu";
 import { IntelList } from "../Intel/IntelList";
 import { IntelListMenu } from "../Intel/IntelListMenu";
+import { MultiSelectMenu } from "./MultiSelectMenu";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -46,19 +48,31 @@ function a11yProps(index: number) {
 
 export const IntelAndEasterEggDrawerContent = () => {
     const theme = useTheme();
-    const [value, setValue] = React.useState(0);
+    const [tabSelectedState, setSelectedTab] = React.useState(0);
+    const [intelMultiSelectState, setIntelMultiSelectState] = useState<string[]>([]);
 
-    const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+
+    const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+        setSelectedTab(newValue);
     };
+
+    const addRemoveItemMultiSelect = (value: string) => {
+        intelMultiSelectState.includes(value) ?
+            setIntelMultiSelectState(intelMultiSelectState.filter(item => item !== value)) :
+            setIntelMultiSelectState([...intelMultiSelectState, value]);
+    }
+
+    const handleSetIntelMultiSelectState = (intelToSelect: string[]) => {
+        setIntelMultiSelectState(intelToSelect)
+    }
 
 
     return (<>
         <Box sx={{ bgcolor: 'background.paper', height: 'inherit' }}>
             <StyledAppBar position="sticky">
                 <Tabs
-                    value={value}
-                    onChange={handleChange}
+                    value={tabSelectedState}
+                    onChange={handleTabChange}
                     indicatorColor="secondary"
                     textColor="inherit"
                     variant="fullWidth"
@@ -67,13 +81,18 @@ export const IntelAndEasterEggDrawerContent = () => {
                     <Tab label="Easter Eggs" {...a11yProps(1)} />
                 </Tabs>
             </StyledAppBar>
-            <StyledTabPanel value={value} index={0} dir={theme.direction}>
+            <StyledTabPanel value={tabSelectedState} index={0} dir={theme.direction}>
                 <TabContentContainer id="intel-filter">
-                    <IntelList />
+                    <MultiSelectMenu
+                        multiSelectState={intelMultiSelectState}
+                        setMultiSelectState={handleSetIntelMultiSelectState} />
+                    <IntelList
+                        multiSelectState={intelMultiSelectState}
+                        addRemoveItemMultiSelect={addRemoveItemMultiSelect} />
                     <IntelListMenu />
                 </TabContentContainer>
             </StyledTabPanel>
-            <StyledTabPanel value={value} index={1} dir={theme.direction}>
+            <StyledTabPanel value={tabSelectedState} index={1} dir={theme.direction}>
                 <TabContentContainer id="eggs-filter">
                     <EggList />
                     <EggListMenu />

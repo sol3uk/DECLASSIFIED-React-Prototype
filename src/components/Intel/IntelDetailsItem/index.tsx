@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { Accordion, AccordionDetails, AccordionSummary, Button, Typography } from "@mui/material";
 import { useLiveQuery } from "dexie-react-hooks";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMapEvents } from "react-leaflet";
 import { DeclassifiedContext } from "../../../contexts/DeclassifiedContext/declassifiedContextProvider";
 import { addCollectedIntel, deleteCollectedIntel } from "../../../data/dataAccessLayer";
@@ -18,6 +18,8 @@ import { CustomImage } from "../../CustomImage";
 
 export interface IIntelItemWithHandler extends IIntelItem {
 	isMarker?: boolean;
+	multiSelectState?: string;
+	addRemoveItemMultiSelect?: (value: string) => void;
 }
 
 export const IntelDetailsItem = ({
@@ -31,20 +33,37 @@ export const IntelDetailsItem = ({
 	desc,
 	img = undefined,
 	isMarker = false,
+	multiSelectState,
+	addRemoveItemMultiSelect,
 }: IIntelItemWithHandler) => {
 	const { setCurrentMapWithValidation: setCurrentMap, currentMap } =
 		useContext(DeclassifiedContext);
 	const mapInstance = useMapEvents({});
 	const [expanded, setExpanded] = useState(false);
+	const [isSelected, setIsSelected] = useState(multiSelectState?.includes(id) ?? false);
 	const IntelHasLocation = loc !== DefaultPOIData.nullLoc;
 	const IntelIsOnAnotherMap = map !== currentMap!.id;
 	const isCollected = useLiveQuery(() => db.intelCollected.get(id));
 	const mapItem = GetMapById(map!);
 
+	function handleSelectIntel(event, isSelected: boolean): void {
+		event.stopPropagation();
+		console.log("handleSelectIntel: ", isSelected);
+		setIsSelected(isSelected);
+		addRemoveItemMultiSelect!(id);
+	}
+
+	useEffect(() => {
+		setIsSelected(multiSelectState?.includes(id) ?? false);
+	}, [id, multiSelectState]);
+
 	return (
 		<StyledAccordion
 			defaultExpanded={isMarker}
-			onChange={() => setExpanded(!expanded)}
+			onChange={(event) => {
+				// if(event)
+				setExpanded(!expanded)
+			}}
 		>
 			<IntelSummary
 				expandIcon={isMarker ? null : <ExpandMoreIcon />}
@@ -58,6 +77,20 @@ export const IntelDetailsItem = ({
 					src={`/assets/img/markers/${typeDesc.toLowerCase()}.png`}
 					alt="Icon"
 				/>
+				{!isMarker ? (isSelected ? (
+					<Button
+						title="selected"
+						onClick={(event) => handleSelectIntel(event, false)}
+					>
+						<CheckBoxIcon htmlColor="var(--clr-blue)" />
+					</Button>
+				) : (
+					<Button
+						title="selected"
+						onClick={(event) => handleSelectIntel(event, true)}>
+						<CheckBoxOutlineBlankIcon htmlColor="var(--clr-blue)" />
+					</Button>
+				)) : null}
 				<Typography variant="h2" className="intelTitle">
 					{title}
 				</Typography>

@@ -43,49 +43,65 @@ export const MapMarkers = () => {
 	const { currentMap } = useContext(DeclassifiedContext);
 	const [isChecked, setIsChecked] = useState(true);
 
-	return (
-		<>
+	const renderedAudioMarkers = renderIntelMapMarkers(currentMap!.id!, IntelType.Audio);
+	const renderedArtifactMarkers = renderIntelMapMarkers(currentMap!.id!, IntelType.Artifact);
+
+	// TODO : Refactor this so it's neater. This is a hacky solution to force the layer controls to be rendered in order
+	const renderOrderOfLayers = [
+		renderedAudioMarkers.length > 0 ? (
 			<LayersControl.Overlay
 				name="Intel - Audio Logs"
 				checked={isChecked /* TODO: SWAP WITH USER PREFS */}
 			>
 				<LayerGroup>
-					{renderIntelMapMarkers(currentMap!.id!, IntelType.Audio)}
+					{renderedAudioMarkers}
 				</LayerGroup>
 			</LayersControl.Overlay>
+		) : null
+		,
+		renderedArtifactMarkers.length > 0 ? (
 			<LayersControl.Overlay
 				name="Intel - Artifacts"
 				checked={isChecked /* TODO: SWAP WITH USER PREFS */}
 			>
 				<LayerGroup>
-					{renderIntelMapMarkers(currentMap!.id!, IntelType.Artifact)}
+					{renderedArtifactMarkers}
 				</LayerGroup>
 			</LayersControl.Overlay>
-
-			{PerkStore[currentMap!.id!] ? (<LayersControl.Overlay
+		) : null
+		,
+		PerkStore[currentMap!.id!] ? (
+			<LayersControl.Overlay
 				name={MarkerLayerTypes.perks.title}
 				checked={isChecked /* TODO: SWAP WITH USER PREFS */}
 			>
 				<LayerGroup>{renderMiscMapMarkers(PerkStore, currentMap!.id!)}</LayerGroup>
-			</LayersControl.Overlay>) : null}
-
-			{MiscStore[currentMap!.id!] ? (
-				<LayersControl.Overlay
-					name={MarkerLayerTypes.misc.title}
-					checked={isChecked /* TODO: SWAP WITH USER PREFS */}
-				>
-					<LayerGroup>{renderMiscMapMarkers(MiscStore, currentMap!.id!)}</LayerGroup>
-				</LayersControl.Overlay>
-			) : null}
-
-
-
-			{StaticEggStore[currentMap!.id!] ? (<LayersControl.Overlay
-				name={MarkerLayerTypes.easterEggs.title}
+			</LayersControl.Overlay>
+		) : null
+		,
+		MiscStore[currentMap!.id!] ? (
+			<LayersControl.Overlay
+				name={MarkerLayerTypes.misc.title}
 				checked={isChecked /* TODO: SWAP WITH USER PREFS */}
 			>
-				<LayerGroup>{renderMiscMapMarkers(StaticEggStore, currentMap!.id!)}</LayerGroup>
-			</LayersControl.Overlay>) : null}
+				<LayerGroup>{renderMiscMapMarkers(MiscStore, currentMap!.id!)}</LayerGroup>
+			</LayersControl.Overlay>
+		) : null
+		,
+		StaticEggStore[currentMap!.id!] ? (<LayersControl.Overlay
+			name={MarkerLayerTypes.easterEggs.title}
+			checked={isChecked /* TODO: SWAP WITH USER PREFS */}
+		>
+			<LayerGroup>{renderMiscMapMarkers(StaticEggStore, currentMap!.id!)}</LayerGroup>
+		</LayersControl.Overlay>) : null
+	]
+	return (
+		<>
+			{renderOrderOfLayers[0]}
+			{renderOrderOfLayers[1]}
+			{renderOrderOfLayers[2]}
+			{renderOrderOfLayers[3]}
+			{renderOrderOfLayers[4]}
 
 
 			{/* <LayersControl.Overlay checked name="Misc Markers">

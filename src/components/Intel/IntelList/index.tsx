@@ -23,7 +23,7 @@ const NoResults = styled.div`
 	}
 `;
 
-export const IntelList = () => {
+export const IntelList = ({ multiSelectState, addRemoveItemMultiSelect }) => {
 	const { currentMapGroup, filteredIntelStore } =
 		useContext(DeclassifiedContext);
 	// const [loading, setLoading] = useState(true); // TODO - Implement loading spinner
@@ -33,7 +33,7 @@ export const IntelList = () => {
 	}
 
 	const RenderedIntelList = filteredIntelStore.map(intel => {
-		return <IntelDetailsItem key={intel.id} {...intel} />;
+		return <IntelDetailsItem key={intel.id} {...intel} multiSelectState={multiSelectState} addRemoveItemMultiSelect={addRemoveItemMultiSelect} />;
 	});
 	if (RenderedIntelList.length === 0) {
 		return (
