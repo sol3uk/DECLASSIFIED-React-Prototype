@@ -6,7 +6,7 @@ import { DeclassifiedContext } from '../../contexts/DeclassifiedContext/declassi
 const StyledSwipeableDrawer = styled(SwipeableDrawer)`
 	.MuiDrawer-paper {
 		@media (max-width: 900px) {
-			height: 75%;
+			max-height: 75%;
 		}
 		@media (min-width: 900px) {
 			height: 100%;
