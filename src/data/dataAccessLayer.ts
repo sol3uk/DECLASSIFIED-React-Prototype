@@ -59,25 +59,30 @@ export async function updateUserPreferences(
 
 export async function addCollectedIntel(intelIds: string[]) {
 	try {
-		for (const intelId of intelIds) {
-			if (intelId) {
-				await db.intelCollected.put({
-					intelId: intelId,
-					dateCollected: new Date(),
-				});
-			}
-		}
+		await Promise.all(
+			intelIds.map((intelId) => {
+				if (intelId) {
+					return db.intelCollected.put({
+						intelId: intelId,
+						dateCollected: new Date(),
+					});
+				}
+			})
+		);
 	} catch (error) {
 		console.log('ERROR - addCollectedIntel: ', error);
 	}
 }
 
-export async function deleteCollectedIntel(intelId: string) {
+export async function deleteCollectedIntel(intelIds: string[]) {
 	try {
-		if (intelId) {
-			return await db.intelCollected.delete(intelId);
-		}
-		return;
+		await Promise.all(
+			intelIds.map((intelId) => {
+				if (intelId) {
+					return db.intelCollected.delete(intelId);
+				}
+			})
+		);
 	} catch (error) {
 		console.log('ERROR - deleteCollectedIntel: ', error);
 	}

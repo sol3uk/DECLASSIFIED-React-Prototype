@@ -5,8 +5,9 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import { Button, ButtonGroup } from '@mui/material';
 import { useContext } from 'react';
 import { DeclassifiedContext } from '../../contexts/DeclassifiedContext/declassifiedContextProvider';
+import { addCollectedIntel, deleteCollectedIntel } from '../../data/dataAccessLayer';
 
-export const MultiSelectMenu = ({ multiSelectState, setMultiSelectState }) => {
+export const MultiSelectMenu = ({ multiSelectState: selectedIntel, setMultiSelectState }) => {
     const { filteredIntelStore } = useContext(DeclassifiedContext);
 
     // Function to handle select/deselect all
@@ -17,7 +18,7 @@ export const MultiSelectMenu = ({ multiSelectState, setMultiSelectState }) => {
 
     // Determine the state of the checkbox based on selection
     const renderCheckBoxIcon = () => {
-        if (multiSelectState.length === 0) {
+        if (selectedIntel.length === 0) {
             return (
                 <Button
                     title="Select all"
@@ -26,7 +27,7 @@ export const MultiSelectMenu = ({ multiSelectState, setMultiSelectState }) => {
                     <CheckBoxOutlineBlankIcon htmlColor="var(--clr-blue)" />
                 </Button>
             );
-        } else if (multiSelectState.length !== filteredIntelStore.length) {
+        } else if (selectedIntel.length !== filteredIntelStore.length) {
             return (
                 <Button
                     title="Deselect all"
@@ -50,7 +51,12 @@ export const MultiSelectMenu = ({ multiSelectState, setMultiSelectState }) => {
     // Functionality for additional buttons
     const handleButtonAction = (actionType) => {
         console.log(`Button ${actionType} clicked!`);
-        // Implement your additional button functionality here
+
+        if (actionType === "collect") {
+            addCollectedIntel([...selectedIntel])
+        } else if (actionType === "un-collect") {
+            deleteCollectedIntel([...selectedIntel])
+        }
     };
 
     return (
@@ -60,16 +66,17 @@ export const MultiSelectMenu = ({ multiSelectState, setMultiSelectState }) => {
 
             {/* Render additional buttons next to the checkbox */}
 
-            <ButtonGroup fullWidth variant="contained">
+            <ButtonGroup disabled={selectedIntel.length === 0} fullWidth variant="contained">
                 <Button
+
                     title="DECLASSIFY"
-                    onClick={() => handleButtonAction("Button 1")}
+                    onClick={() => handleButtonAction("collect")}
                 >
                     DECLASSIFY ✅
                 </Button>
                 <Button
                     title="CLASSIFY"
-                    onClick={() => handleButtonAction("Button 2")}
+                    onClick={() => handleButtonAction("un-collect")}
                 >
                     CLASSIFY ❌
                 </Button>

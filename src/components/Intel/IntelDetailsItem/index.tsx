@@ -107,7 +107,7 @@ export const IntelDetailsItem = ({
 							{isCollected ? (
 								<Button
 									title="collected"
-									onClick={() => deleteCollectedIntel(id)}
+									onClick={() => deleteCollectedIntel([id])}
 								>
 									<CheckBoxIcon htmlColor="var(--clr-blue)" />
 								</Button>
