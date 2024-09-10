@@ -10,12 +10,17 @@ const StyledEggList = styled.div`
 	padding: 10px;
 `;
 
-const NoResults = styled(Paper)`
+const NoResults = styled.div`
+    padding: 10px;
+
+    .MuiPaper-root{
+        background-color: var(--clr-bg-inverted);
+    }
 	h2 {
-		display: flex;
+        display: flex;
 		justify-content: center;
 		font-size: 1.5rem;
-		padding: 10px;
+        padding: 10px;
 	}
 `;
 
@@ -42,7 +47,9 @@ export const EggList = () => {
     if (RenderedEggList.length === 0) {
         return (
             <NoResults>
-                <Typography variant="h2"> No Egg Found...</Typography>
+                <Paper>
+                    <Typography variant="h2"> Nothing Found...</Typography>
+                </Paper>
             </NoResults>
         );
     }
