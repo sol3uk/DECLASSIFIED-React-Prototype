@@ -55,7 +55,7 @@ export const IntelAndEasterEggDrawerContent = () => {
 
     return (<>
         <Box sx={{ bgcolor: 'background.paper', height: 'inherit' }}>
-            <AppBar position="static">
+            <StyledAppBar position="sticky">
                 <Tabs
                     value={value}
                     onChange={handleChange}
@@ -66,7 +66,7 @@ export const IntelAndEasterEggDrawerContent = () => {
                     <Tab label="Intel" {...a11yProps(0)} />
                     <Tab label="Easter Eggs" {...a11yProps(1)} />
                 </Tabs>
-            </AppBar>
+            </StyledAppBar>
             <StyledTabPanel value={value} index={0} dir={theme.direction}>
                 <TabContentContainer id="intel-filter">
                     <IntelList />
@@ -92,7 +92,12 @@ const TabContentContainer = styled.div`
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
-    `;
+`;
+
+const StyledAppBar = styled(AppBar)`
+    background-color: var(--clr-bg);
+`;
+
 const StyledTabPanel = styled(TabPanel)`
 height: inherit;
 .MuiBox-root{

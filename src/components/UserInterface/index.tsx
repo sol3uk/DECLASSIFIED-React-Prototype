@@ -12,7 +12,7 @@ import { useMapEvent, useMapEvents } from 'react-leaflet';
 import { DeclassifiedContext } from '../../contexts/DeclassifiedContext/declassifiedContextProvider';
 import { useNotification } from '../../contexts/NotificationContext/notificationContext';
 import { useUserContext } from '../../contexts/UserContext/userContextProvider';
-import { IntelAndEasterEggDrawerContent } from '../DrawerMenu/IntelDrawerContent';
+import { IntelAndEasterEggDrawerContent } from '../DrawerMenu/IntelAndEasterEggDrawerContent';
 import { SettingsDrawerContent } from '../DrawerMenu/SettingsDrawerContent';
 
 const StyledUiContainer = styled.div<{ $isMobile?: boolean }>`
